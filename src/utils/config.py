@@ -1,0 +1,9 @@
+DATA_PATH = "dataset/SNLI/"
+TRAIN_DATA_PATH = DATA_PATH + 'train.csv'
+DEV_DATA_PATH = DATA_PATH + 'dev.csv'
+TEST_DATA_PATH = DATA_PATH + 'test.csv'
+MAX_LEN = 50
+BINARY_VOCAB_PATH = 'vocab_binary1mil.pkl'
+BATCH_SIZE = 64
+EPOCHS = 5
+LEARNING_RATE = 0.001
