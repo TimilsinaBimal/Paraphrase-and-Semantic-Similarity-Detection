@@ -1,9 +1,10 @@
-DATA_PATH = "dataset/SNLI/"
+DATA_PATH = "data/SNLI/"
 TRAIN_DATA_PATH = DATA_PATH + 'train.csv'
 DEV_DATA_PATH = DATA_PATH + 'dev.csv'
 TEST_DATA_PATH = DATA_PATH + 'test.csv'
 MAX_LEN = 50
-BINARY_VOCAB_PATH = 'vocab_binary1mil.pkl'
+BINARY_VOCAB_PATH = 'pickle_files/Final/vocab.pkl'
+MODEL_PATH = 'pickle_files/Final/model.h5'
 BATCH_SIZE = 64
 EPOCHS = 5
 LEARNING_RATE = 0.001

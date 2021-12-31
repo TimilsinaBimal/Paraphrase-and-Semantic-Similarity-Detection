@@ -1,17 +1,19 @@
-import numpy as np
+from utils.config import (
+    BATCH_SIZE, BINARY_VOCAB_PATH, DEV_DATA_PATH, EPOCHS,
+    LEARNING_RATE, MODEL_PATH, TEST_DATA_PATH,
+    TRAIN_DATA_PATH)
+from models.predict import predict_binary, predict_binary_single
+from data.preprocessing import prepare_data, read_data
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras import models
-from data.preprocessing import prepare_data, read_data
-from models.predict import predict_binary, predict_binary_single
-from utils.config import (
-    BATCH_SIZE, BINARY_VOCAB_PATH, DEV_DATA_PATH,
-    EPOCHS, TEST_DATA_PATH, TRAIN_DATA_PATH,
-    LEARNING_RATE
-)
+import numpy as np
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 
 # df_train = read_data(TRAIN_DATA_PATH)
 # df_dev = read_data(DEV_DATA_PATH)
-df_test = read_data(TEST_DATA_PATH)
+# df_test = read_data(TEST_DATA_PATH)
 
 
 # df_train_pos = df_train.loc[(df_train['similarity'] == 1)]
@@ -24,12 +26,12 @@ df_test = read_data(TEST_DATA_PATH)
 # dev_sen1 = df_dev['sentence1'].tolist()
 # dev_sen2 = df_dev['sentence2'].tolist()
 
-test_sen1 = df_test['sentence1'].tolist()
-test_sen2 = df_test['sentence2'].tolist()
+# test_sen1 = df_test['sentence1'].tolist()
+# test_sen2 = df_test['sentence2'].tolist()
 
 # train_label = df_train['similarity'].tolist()
 # dev_label = df_dev['similarity'].tolist()
-test_label = df_test['similarity'].tolist()
+# test_label = df_test['similarity'].tolist()
 
 
 def compile_and_train(
@@ -56,18 +58,32 @@ def compile_and_train(
 
 
 def make_predictions():
-    # sentence1 = input('Enter Sentence 1: ')
-    # sentence2 = input('Enter Sentence 2: ')
+    # =============================
+    # A woman with a green headscarf, blue shirt and a very big grin.
+    # The woman is happy. <POSITIVE>
+    # The woman is sad. <NEGATIVE>
+    sentence1 = input('Enter Sentence 1: ')
+    sentence2 = input('Enter Sentence 2: ')
     data1, data2 = prepare_data(
-        test_sen1,
-        test_sen2,
+        [sentence1],
+        [sentence2],
         BINARY_VOCAB_PATH,
         training=False
     )
-    model = models.load_model('binary_loss_model1.h5')
-    preds = predict_binary(model, [data1, data2])
-    print(preds)
-    print(np.sum(np.array(preds) == np.array(test_label)) / len(test_label))
+    model = models.load_model(MODEL_PATH)
+    preds = predict_binary_single(model, data1, data2)
+    print("\n" * 3)
+    print("===PARAPHRASE AND SEMANTIC SIMILARITY DETECTION===")
+    print("SENTENCE 1: ", sentence1)
+    print("SENTENCE 2: ", sentence2)
+    print("===MODEL PREDICTION===")
+    print("\n" * 1)
+    if preds == 0:
+        print("Sentence 1 and sentence 2 are semantically Different!")
+    elif preds == 1:
+        print("Sentence 1 and sentence 2 are semantically Similar!")
+
+    print("\n" * 2)
 
 
 make_predictions()
